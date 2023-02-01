@@ -1,7 +1,7 @@
 if __name__ == "__main__":
     N, X = map(int, input().split())
+    a = map(int, input().split())
 
-    for _ in range(N):
-        number = int(input())
-        if X > number:
-            print(number)
+    for item in a:
+        if item < X:
+            print(item, end=' ')

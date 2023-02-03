@@ -16,6 +16,7 @@ if __name__ == "__main__":
         if ga==0 and gb==0 or gc==0:
             break
 
+        # 아래처럼 sort 할 필요 없이 세 가지 경우로 if 취하면 된다
         a, b, c = sort(ga, gb, gc)
 
         if a**2 + b**2 == c**2:

@@ -12,16 +12,6 @@ def guess_cr(a):
 def is_not_self(n):
     """샐프 넘버가 아니면 True, 맞으면 False 리턴"""
 
-    # 20 미만의 수는 예외 처리
-    if n < 10:
-        if n % 2 == 0:
-            return False
-        else:
-            return True
-
-    if n < 20:
-        return False
-
     # 2의 자릿수 이상으로만 추측한 생성자에서 1의 자릿수가 0 ~ 9 까지의 생성자가 자동으로 도출됨
     # 추측한 생성자 = (2의 자릿수로 이상으로만 추측한 생성자 + 1의 자릿수 * 2)
     # 즉 2의 자릿수 이상으로만 추측한 생성자에서 나머지 1의 자릿수 경우의 수 10개를 한꺼번에 도출할 수 있음
@@ -36,7 +26,7 @@ def is_not_self(n):
     # index 를 1 씩 빼가며 반복
     # 반복하다가 추측한 생성자가 n보다 너무 작아졌다면 생성자가 없다고 판단 -> True 리턴
 
-    while pre_cr + 30 >= n and index != 0:
+    while pre_cr + 25 > n and 0 <= index:
 
         if pre_cr <= n <= pre_cr + 18 and (pre_cr - n) % 2 == 0:
             return False

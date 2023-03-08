@@ -7,6 +7,7 @@ if __name__ == "__main__":
     two = 0
     five = 0
 
+    # 2의 갯수가 5의 갯수보다 항상 많으므로 아래 코드에서 two 는 필요 없다
     for i in range(n+1):
 
         temp = i

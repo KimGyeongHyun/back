@@ -2,6 +2,9 @@ from sys import stdin
 
 
 # 3) 01654. 랜선 자르기 문제와 같은 형식으로 풀이
+# 이 문제도 ex_01654_code.py 같이
+# while start <= end, start = mid + 1, end = mid - 1
+# 의 조건으로 풀면 코드도 간결해지고 알고리즘도 단순해진다
 def get_tree_height_sum(input_list, input_cut_height):
 
     tree_height_sum = 0

@@ -46,7 +46,7 @@ if __name__ == "__main__":
     n, m = map(int, input().split())
     l = list(map(int, input().split()))
 
-    start = 1
+    start = 0
     end = 5000 * 10000
     result = 0
 
@@ -56,13 +56,15 @@ if __name__ == "__main__":
         max = 10000
         index = 0
         count = 0
-        over_two = 0
-        impossible_flag = False
 
-        while index <= n-2:
-            print("index :", index)
-            f, s = l[index], l[index+1]
-            if f <= s:
+        while index <= n - 1:
+            count += 1
+            index += 1
+            if index >= n:
+                break
+            f = l[index-1]
+            s = l[index]
+            if f < s:
                 min = f
                 max = s
             else:
@@ -70,37 +72,24 @@ if __name__ == "__main__":
                 max = f
 
             if max - min > mid:
-                if over_two == 0:
-                    impossible_flag = True
-                    break
+                continue
 
-                over_two = 0
-                if -mid < l[index-1] - l[index] < mid:
-                    count += 1
-                    index += 1
-                    continue
-                else:
-                    impossible_flag = True
-                    break
-
-            count += 1
-            index += 2
-            over_two = 0
-
-            while index <= n-1:
-                t = l[index]
+            while True:
                 index += 1
-                over_two += 1
+                if index >= n:
+                    break
+                t = l[index]
                 if t < min:
                     min = t
                 if max < t:
                     max = t
+
                 if max - min > mid:
                     break
 
-        print(start, mid, end, count, result)
+        # print(start, mid, end, count, result)
 
-        if m >= count and not impossible_flag:
+        if m >= count:
             result = mid
             end = mid - 1
         else:

@@ -1,6 +1,13 @@
 import sys
 input = sys.stdin.readline
 
+# 문제 조건 : m개의 나뉜 배열의 각 총합이 최소가 되는 값을 찾아야 함
+# 해당 최솟값을 이분 탐색으로 찾을 예정
+
+# mid : 특정 최솟값, count : mid 를 기준으로 나오는 나뉜 배열 갯수
+# 1. mid 와 count 는 반비례
+# 2. m = count 조건일 대에도 mid 의 최솟값을 계속 찾아야 함
+# (m >= count 조건을 만족하며 count 가 변화가 없을 때까지 max 값을 계속 갱신하며 mid 값을 최소로 구함)
 
 if __name__ == "__main__":
     n, m = map(int, input().split())
@@ -8,41 +15,37 @@ if __name__ == "__main__":
 
     min = max(l)    # 블루레이 최소 재생시간은 모든 강의 길이보단 크거나 같아야 한다
     max = 10000 * 100000    # 강의 최대 재생시간 * 강의 최대 개수
-    result = 0
+    result = 0      # 정답 갱신
 
+    # 이분 탐색
     while min <= max:
         mid = (min + max) // 2
 
-        count = 0
-        index = 0
+        count = 0   # 나뉜 배열 개수
+        index = 0   # 배열 탐색 인덱스
+        # 배열 나누기
         while index <= n - 1:
-            sum = 0
+            # 배열 추가
+            sum = l[index]
+            count += 1
 
-            # mid의 시간까지 강의시간을 넘긴다
-            # index 를 mid 시간까지 계속 증가시킨다
-            while sum + l[index] <= mid:
-                sum += l[index]
-                # print("sum, index :", sum, index)
+            # 배열 총합이 mid 를 넘지 않을 때까지 index + 1
+            while True:
                 index += 1
+                # 남아있는 수가 없으면 탈출
                 if index >= n:
                     break
 
-            count += 1
-
-        # print(" to min, mid, max, count :", min, mid, max, count)
-
-        # mid 가 커지면 count 는 작아진다
-        # result 는 m == count 를 만족하면서 mid 중 제일 큰 값일 때 갱신이 되어야 한다
-        # mid 가 매우 큰 상태에서 count 가 m 보다 작을 때도 result 를 갱신한다
-        # 그러다가 mid 가 적당히 커져 count <= m 을 만족하고,
-        # mid+1의 경우 count > m 이 되는 경우까지 찾아야 한다
+                # 배열에 새로 추가된 수를 배열 총합에 더함
+                sum += l[index]
+                # 총합이 mid 를 넘으면 탈출
+                if mid < sum:
+                    break
 
         if m < count:
             min = mid + 1
         else:
             result = mid
             max = mid - 1
-
-        # print(" result :", result)
 
     print(result)

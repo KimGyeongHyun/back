@@ -9,59 +9,54 @@ input = sys.stdin.readline
 # m : 나와야 하는 나뉜 배열의 갯수
 # 1. mid 와 count 는 반비례
 # 2. m = count 조건일 때에도 mid 의 최솟값을 계속 찾아야 함
-# (m >= count 조건일 때 max 값을 계속 갱신하여
-#   m >= count 조건을 만족하며 count 를 극한까지 높히는 방향으로 다가가기)
+# (m >= count 조건을 만족하며 count 변화가 없을 때까지 max 값을 계속 갱신하여 mid 값을 줄인다)
 
-# 말 그대로 mid 일 때 나뉜 배열의 최소 갯수인 count 를 구하는 것이기 때문에
-# 실제로 count 보다 더 많이 배열이 나뉠 수 있음
-# 하지만 문제에선 m개의 제한된 배열로 최댓값을 구하는 것이기 때문에
-# 불필요하게 배열을 나누지 않음
 
-# mid 에서 배열을 최소로 나눠 count 를 도출한 것이,
-# count 개의 나뉜 배열에서 모든 (최댓값 - 최솟값) 중 최댓값이 최솟값이 mid 가 나온다는 증명이 필요
+# 이분 탐색을 통해 mid 를 끝까지 도출한 상태에서의 나뉜 배열의 갯수를 count 라고 한다면
+# count 개의 나뉜 배열에서 모든 (최댓값 - 최솟값) 중 최댓값이 최솟값인 경우는 mid이다
+# 라는 증명이 필요하다
 
-# 1. count 개의 나뉜 배열에서 mid 를 도출할 수 있다
-# 2. mid 보다 작은 값을 count 로 도출할 수 있는지 증명 필요
-# 그전에 만약 증명이 필요 없이 mid 보다 작은 값으로도 도출이 가능할 때
-# 이분 탐색으로 자연스럽게 예외 처리되는지 확인해야 함
+# 증명
+# 1. count 개의 나뉜 배열에서 mid 보다 작은 값들은 도출할 수 없다
+#   mid -> count1, mid-1 -> count2 라고 했을 때
+#   count1 > count2 가 성립한다  (mid 이분 탐색을 끝까지 했을 때)
+# 2. count 개의 나뉜 배열에서 mid 를 도출할 수 있다
+#   mid 에서 count 가 나온다는 것을 계산했다
+# 3. count 개의 나뉜 배열에서 mid 보다 큰 값들도 도출할 수 있다
+#   배열을 짧게 나눌수록 더욱 큰 값들도 나올 수 있다
 
 # 극한까지 mid 를 탐색하여 (mid -> m, mid-1 -> m이상) 의 결과를 찾았다고 가정
-# m 개에선 mid이하까지 도출 가능, m 초과 개에선 mid-1 이하까지 도출 가능
+# m 개에선 mid 이상까지 도출 가능, m 초과 개에선 mid-1 이상까지 도출 가능
+# 즉, m 개의 나뉜 배열에선 mid 가 최대값
 
-
-# 1 5 3 8 20 21 / mid = 5 인 경우
-# 1, 5, 3 으로 자르면 8, 20 사이에 갭이 생겨 구성이 불가능하다고 판단이 된다
-# 하지만 1, 5 / 3, 8 로 나누면 구성이 가능하다
-# 즉 앞쪽에서 쭉 봤을 때도 값이 넘는지 확인하는 것이 중요하지만
-# 뒤쪽에서 보는 것도 생각해야 한다
-
-# 만약 앞쪽에서 비교하다가 mid 를 넘는 값이 발견 되었다면
-# 해당 인덱스의 앞쪽 수를 참고할 수 있는지 여부 확인 필요
-# 만약 앞쪽 수에 포함할 수 있는 수가 없으면 인덱스를 넘기면 된다
-
-# 앞쪽 수는 하나만 확인하면 된다
-# 되면 되는 거고 안 되면 안 되는 것
 
 if __name__ == "__main__":
     n, m = map(int, input().split())
     l = list(map(int, input().split()))
 
-    start = 0
-    end = 5000 * 10000
-    result = 0
+    start = 0               # 시작점
+    end = 5000 * 10000      # 끝점
+    result = 0              # 정답 갱신
 
+    # 이분 탐색
     while start <= end:
         mid = (start + end) // 2
-        min = 1
-        max = 10000
-        index = 0
-        count = 0
+        min = 1         # 나뉜 배열의 최솟값
+        max = 10000     # 나뉜 배열의 최댓값
+        index = 0       # 배열 순환 인덱스
+        count = 0       # 나뉜 배열 갯수
 
+        # 배열 갯수 계산
         while index <= n - 1:
+            # 배열 추가
             count += 1
             index += 1
+            # 남아있는 수가 없으면 탈출
             if index >= n:
                 break
+
+            # 배열 크기가 2가 되었다면
+            # 배열 내 최댓값 최솟값 갱신
             f = l[index-1]
             s = l[index]
             if f < s:
@@ -71,23 +66,27 @@ if __name__ == "__main__":
                 min = s
                 max = f
 
+            # 범위가 mid 보다 크다면 배열을 나눔
             if max - min > mid:
                 continue
 
+            # max - min <= mid 조건일 때까지 index + 1
             while True:
                 index += 1
+                # 남아있는 수가 없으면 탈출
                 if index >= n:
                     break
+
+                # min, max 값을 새로 들어온 수에 맞게 갱신
                 t = l[index]
                 if t < min:
                     min = t
                 if max < t:
                     max = t
 
+                # 범위가 mid 보다 크다면 배열을 나눔
                 if max - min > mid:
                     break
-
-        # print(start, mid, end, count, result)
 
         if m >= count:
             result = mid

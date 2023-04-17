@@ -1,0 +1,2 @@
+input = sys.stdin.readline 으로 구성하였을 때
+백준에서 ValueError 가 발생할 수 있음

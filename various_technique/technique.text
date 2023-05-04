@@ -11,3 +11,5 @@ copy.deepcopy(2차원 배열)
 의 구성으로 해야한다
 
 DFS 를 비롯한 제귀 메소드는 divide and conquer 의 알고리즘이 유용할 수 있다
+단, dp 를 구성할 때 divide and conquer 가 같은 값을 여러번 부른다면
+dp를 직접 구성하는 것이 더 빠를 수 있다

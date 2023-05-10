@@ -13,8 +13,8 @@ print(random.randint(1, 10))
 nm = []
 l = []
 
-for i in range(2):
-    nm.append(random.randint(1, 10))
+for i in range(10):
+    nm.append(random.randint(1, 5))
     print(nm[i], end=' ')
 
 print()

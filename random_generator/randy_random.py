@@ -24,21 +24,9 @@ import random
 #         print(random.randint(10, 99), end=' ')
 #     print()
 
-MONTH_DAYS = [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
-DAYS_SUM = 365
-
-def get_month_day(days):
-    month = 1
-    while days > 0:
-        days -= MONTH_DAYS[month]
-        month += 1
-
-    return month-1, days + MONTH_DAYS[month-1]
-
-print(15)
-for i in range(15):
-    x = random.randint(1, 365)
-    y = random.randint(x, 365)
-    xm, xd = get_month_day(x)
-    ym, yd = get_month_day(y)
-    print(xm, xd, ym, yd)
+repeat = 20
+print(repeat)
+for i in range(repeat):
+    x = random.randint(1, 100)
+    y = random.randint(x, 100)
+    print(x, y)

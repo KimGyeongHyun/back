@@ -1,14 +1,12 @@
 from sys import stdin
+from collections import deque
 
 
 class Node:
 
-    def __init__(self, data):
-        self.data = data
+    def __init__(self, input_data):
+        self.data = input_data
         self.childs = []
-
-    def return_data(self):
-        return self.data
 
     def add_child(self, input_node):
         self.childs.append(input_node)
@@ -16,97 +14,87 @@ class Node:
     def del_child(self, input_index):
         del self.childs[input_index]
 
+    def get_data(self):
+        return self.data
+
 
 class Tree:
-    sum = 0
+
+    leaf_count = 0
 
     def __init__(self):
         self.root = None
 
     def add_node(self, start_data, parent_data, input_node):
-
+        # print(start_data, parent_data)
         if self.root is None:
             self.root = Node(start_data)
             return
 
-        if input_node.return_data() == parent_data:
-            if input_node.left_child is None:
-                input_node.add_left_child(BinaryNode(start_data))
-            else:
-                input_node.add_right_child(BinaryNode(start_data))
-        else:
-            if input_node.left_child is not None:
-                self.add_node(start_data, parent_data, input_node.left_child)
-                if input_node.right_child is not None:
-                    self.add_node(start_data, parent_data, input_node.right_child)
+        if input_node.get_data() == parent_data:
+            input_node.add_child(Node(start_data))
 
-    def del_node(self, input_data, input_node):
-        if input_data == 0:
+        for child in input_node.childs:
+            self.add_node(start_data, parent_data, child)
+
+    def del_node(self, del_data, input_node):
+
+        if del_data == input_node.get_data():
             self.root = None
-        if input_node.left_child is not None:
-            if input_node.left_child.return_data() == input_data:
-                input_node.left_child = None
+
+        for i in range(len(input_node.childs)):
+            if input_node.childs[i].get_data() == del_data:
+                input_node.del_child(i)
                 return
-            else:
-                self.del_node(input_data, input_node.left_child)
-        if input_node.right_child is not None:
-            if input_node.right_child.return_data() == input_data:
-                input_node.right_child = None
-                return
-            else:
-                self.del_node(input_data, input_node.right_child)
 
-    def get_leaf_count(self, input_node):
+        for child in input_node.childs:
+            self.del_node(del_data, child)
 
-        if self.root is None:
-            return 0
-
-        if input_node.left_child is None and input_node.right_child is None:
-            self.sum += 1
+    def count_leaf(self, input_node):
+        if input_node is None:
+            self.leaf_count = 0
             return
 
-        if input_node.left_child is not None:
-            self.get_leaf_count(input_node.left_child)
-        if input_node.right_child is not None:
-            self.get_leaf_count(input_node.right_child)
+        if len(input_node.childs) == 0:
+            self.leaf_count += 1
+            return
+
+        for child in input_node.childs:
+            self.count_leaf(child)
 
     def pre_order(self, input_node):
-        print(input_node.return_data(), end=' ')
-        if input_node.left_child is not None:
-            self.pre_order(input_node.left_child)
-        if input_node.right_child is not None:
-            self.pre_order(input_node.right_child)
-
-
-    #
-    # def in_order(self, input_node):
-    #     if input_node.left_child is not None:
-    #         self.in_order(input_node.left_child)
-    #     print(input_node.return_data(), end='')
-    #     if input_node.right_child is not None:
-    #         self.in_order(input_node.right_child)
-    #
-    # def post_order(self, input_node):
-    #     if input_node.left_child is not None:
-    #         self.post_order(input_node.left_child)
-    #     if input_node.right_child is not None:
-    #         self.post_order(input_node.right_child)
-    #     print(input_node.return_data(), end='')
+        if input_node is None:
+            return
+        print(input_node.get_data(), end=' ')
+        for child in input_node.childs:
+            self.pre_order(child)
 
 
 if __name__ == "__main__":
     n = int(stdin.readline())
     l = list(map(int, stdin.readline().split()))
     tree = Tree()
+    g = [[] for _ in range(n)]  # [부모노드, [자식노드들]]
+    d = deque()
     for i in range(n):
-        tree.add_node(i, l[i], tree.root)
+        if l[i] == -1:
+            d.append((-1, i))
+            continue
+        g[l[i]].append(i)
+
+    while d:
+
+        parent, dest = d.popleft()
+        tree.add_node(dest, parent, tree.root)
+
+        for d_dest in g[dest]:
+            d.append((dest, d_dest))
+
     del_data = int(stdin.readline())
 
-    tree.sum = 0
-    # print(tree.sum)
     tree.del_node(del_data, tree.root)
-    tree.sum = 0
-    tree.get_leaf_count(tree.root)
-    print(tree.sum)
+    tree.leaf_count = 0
+    tree.count_leaf(tree.root)
+    print(tree.leaf_count)
 
 

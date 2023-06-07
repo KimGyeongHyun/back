@@ -5,7 +5,28 @@ import matplotlib.pyplot as plt
 def print_2d_array(l):
     """2차원 배열 출력"""
     for line in l:
+        if not line:
+            print("None")
+            continue
         print(*line)
+
+
+def print_2d_array_avoid_0(l):
+    """2차원 배열 첫번째 인덱스를 제거하고 출력"""
+    for line in l[1:]:
+        if not line:
+            print("None")
+            continue
+        print(*line)
+
+
+def print_2d_array_avoid_00(l):
+    """2차원 배열 모든 첫번째 인덱스를 제거하고 출력"""
+    for line in l[1:]:
+        if not line[1:]:
+            print("None")
+            continue
+        print(*line[1:])
 
 
 def see_heapq(l):

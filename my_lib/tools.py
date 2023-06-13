@@ -47,6 +47,7 @@ def see_heapq(l):
 
 
 def draw_l_line(l):
+    """시작점, 끝점을 가지는 배열을 시각화하여 보여준다"""
     for i in range(len(l)):
         plt.hlines(i+1, l[i][0], l[i][1], color='blue')
     plt.show()

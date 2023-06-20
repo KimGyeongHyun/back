@@ -66,7 +66,7 @@ def slicing(start, end, in_w, pre_w):
     root = post_order[end]
     # 해당 루트 노드를 pre order 배열에 넣는다
     # pre_w: post order 기준 pre order 에서 부분 트리가 밀린 횟수
-    pre_order[start+pre_w] = str(root)
+    pre_order[start+pre_w] = root
 
     # 부분 트리가 노드 1개밖에 없다면 종료
     if start == end:
@@ -101,7 +101,7 @@ if __name__ == "__main__":
 
     in_order = list(map(int, input().split()))
     post_order = list(map(int, input().split()))
-    pre_order = ["" for _ in range(n)]
+    pre_order = [0 for _ in range(n)]
 
     slicing(0, n - 1, 0, 0)     # pre_order 구성
-    print(" ".join(pre_order))
+    print(" ".join(map(str, pre_order)))

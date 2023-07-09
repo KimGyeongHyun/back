@@ -18,9 +18,9 @@ DIV_NUM = 1000000007
 
 # 문제에선 (n! / (k! * (n-k)!)) % 1000000007 과 같이 나눗셈이 존재한다
 # 하지만 모듈러 나눗셈 분배법칙은 없다
-# p 가 소수일 때 페르마 소정리로 나눗셈 분배법칙을 뽑아낼 수 있다 (1000000007은 소수)
+# p 가 소수일 때 나눗셈 분배법칙을 2가지 방법으로 뽑아낼 수 있다 (1000000007은 소수)
 
-# p 가 소수일 때 모듈러 나눗셈 분배법칙을 뽑아내기 위한 이론
+# 풀이 1) 모듈러 곱셈 역원을 직접 구한다
 
 # 1. 유클리드 호제법 (최대공약수 빨리 구하기)
 # GCD(a, b) = a, b 의 최대공약수
@@ -65,18 +65,29 @@ DIV_NUM = 1000000007
 # 해당 문제에선 신경 쓸 필요 없다)
 # 위에서 구한 확장 유클리드 알고리즘으로 모듈러 역원인 x 를 구할 수 있다
 
-# 4. 페르마 소정리
-# a 가 정수이고 p 가 소수라면
-# a**(p-2) % p = a**-1 % p
-# 라고 볼 수 있다
-
 # 위의 정리를 종합하여 (a / b) % p 를 구한다면 (p 는 소수)
-# 페르마 소정리에 의하여 (1/b) % p = b**(p-2) % p
 # 모듈러 곱셈 법칙에 의하여
 # (a / b) % p = (a * (1/b)) % p = ((a % p) * ((1/b) % p)) % p
+# 의 식을 얻을 수 있다
+
+# 풀이 2) 페르마 소정리로 역원을 구한다
+
+# 1. 페르마 소정리
+# a 가 정수이고 p 가 소수라면 a 의 p 의 모듈러 곱셈에 대한 역원을 찾을 수 있다
+# a**-1 % p = a**(p-2) % p
+# 페르마 소정리의 경우 ((a % p) * ((1/b) % p)) % p
 # = ((a % p) * (b**(p-2) % p)) % p 의 식을 얻을 수 있다
 
-# 모듈러 곱셈 분배법칙으로 a, b 를 구하고 페르마 소정리로 역원을 찾은 후 정답을 구하면 된다
+# 2. 거듭제곱을 구할 때 지수를 반으로 나누는 방식 사용
+# 팩토리얼 연산과 마찬가지로 모듈로 곱셈 분배법칙에 따라 큰 수를 날리며 계산
+# b**(p-2) 에서 p 는 1000000007 이기 때문에 그냥 실행하면 시간 초과 발생
+# 따라서 지수를 반씩 나눠 계산해야 한다
+# a**b 가 있을 때
+# b 가 짝수라면 a**b = a**(2*(b//2)) = (a**2)**(b//2),
+# b 가 홀수라면 a**b = a**(2*(b//2)+1) = a * (a**2)**(b//2) 이다
+# b 가 1, 0 일 때 a**b 는 각각 a, 1 이므로 재귀 함수를 사용한다
+
+# a, b 를 구하고 두가지 방법중 하나로 모듈러 곱셈에 대한 역원을 찾은 후 정답을 구한다
 
 
 def eed(a, b):
@@ -105,25 +116,50 @@ def factorial(a):
     res = 1
 
     for i in range(1, a+1):
-        res = (res * i) % DIV_NUM
+        res = res * i % DIV_NUM
 
     return res
 
 
-def bio_co(input_n, input_k):
-    """이항 계수 n, k 를 1000000007 로 나눈 나머지 값을 반환"""
+def power(a, rep):
+    """최종 연산이 모듈러 연산임을 가정하고 모듈러 곱셈 분배법칙으로 거듭제곱 값 반환"""
 
-    # (first * second) % 1000000007
-    # first : n!
-    # second : k! * (n-k)! 의 역원
+    if rep == 0:
+        return 1
+    if rep == 1:
+        return a
+
+    mid = power(a, rep // 2)
+
+    if rep % 2 == 0:
+        return mid * mid % DIV_NUM
+    else:
+        return mid * mid * a % DIV_NUM
+
+
+def bio_co(input_n, input_k, mod):
+    """모듈러 곱셈 역원을 구하여 이항 계수 n, k 를 1000000007 로 나눈 나머지 값을 반환"""
+
+    # ((a % p) * ((1/b) % p)) % p
+    # first : a % p, second : (1/b) % p
+    # answer : (first * second) % p
+
     first = factorial(input_n)
-    second = mod_inverse((factorial(input_k) * factorial(input_n-input_k)) % DIV_NUM)
+    b = factorial(input_k) * factorial(input_n - input_k) % DIV_NUM
 
-    return (first * second) % DIV_NUM
+    if mod == "rev":
+        second = mod_inverse(b)         # 역원 직접 구하기
+    elif mod == "sm":
+        second = power(b, DIV_NUM - 2)  # 페르마 소정리로 역원 구하기
+    else:
+        return 0
+
+    return first * second % DIV_NUM
 
 
 if __name__ == "__main__":
 
     n, k = map(int, sys.stdin.readline().split())
 
-    print(bio_co(n, k))
+    print(bio_co(n, k, "rev"))
+    # print(bio_co(n, k, "sm"))

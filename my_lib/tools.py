@@ -29,6 +29,20 @@ def print_2d_array_avoid_00(l):
         print(*line[1:])
 
 
+def print_2d_array_01(l):
+    """2차원 boolean 배열을 0, 1로 출력"""
+    for line in l:
+        if not line:
+            print("None")
+            continue
+        for i in range(len(line)):
+            if line[i]:
+                print(1, end=" ")
+            else:
+                print(0, end=" ")
+        print()
+
+
 def see_heapq(l):
     """힙을 깊은 복사하여 순서대로 출력"""
 

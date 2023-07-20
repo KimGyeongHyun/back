@@ -2,6 +2,14 @@ import heapq
 import matplotlib.pyplot as plt
 
 
+def print_list_pretty(l, exp):
+    """숫자 배열을 받아 exp 자릿수로 0을 채워 맞춰서 출력"""
+    t = "{:0" + str(exp) + "}"
+    for num in l:
+        print(t.format(num), end=" ")
+    print()
+
+
 def print_2d_array(l):
     """2차원 배열 출력"""
     for line in l:

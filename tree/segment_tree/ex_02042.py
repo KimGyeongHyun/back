@@ -6,11 +6,19 @@ input = sys.stdin.readline
 class SegmentTree:
 
     def __init__(self, input_l) -> None:
+        """수 리스트를 받고 세그먼트 트리로 초기화"""
         self.l = input_l
         self.tree = [0 for _ in range(len(self.l) * 4)]
         self._set_tree(0, len(self.l) - 1, 1)
 
     def _set_tree(self, start, end, tree_idx):
+        """
+
+        :param start: 수 리스트 시작 인덱스
+        :param end: 수 리스트 끝 인덱스
+      스 :param tree_idx:
+        :return:
+        """
         if start == end:
             self.tree[tree_idx] = self.l[start]
             return self.tree[tree_idx]

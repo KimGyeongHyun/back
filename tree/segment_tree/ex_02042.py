@@ -16,7 +16,7 @@ class SegmentTree:
 
         :param start: 수 리스트 시작 인덱스
         :param end: 수 리스트 끝 인덱스
-      스 :param tree_idx:
+        :param tree_idx: 트리에 삽입될 인덱스
         :return:
         """
         if start == end:
